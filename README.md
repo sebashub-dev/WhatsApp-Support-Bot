@@ -64,6 +64,7 @@ cloudflared tunnel --url http://localhost:8000
 
 
 ## Arquitectura
+```
 Usuario (WhatsApp)
         ↓
 API de Twilio
@@ -75,6 +76,7 @@ Servidor FastAPI (webhook)
 Google AI — Gemma 4
         ↓
 Respuesta vía Twilio → Usuario
+```
 
 
 ## Demo
