@@ -1,6 +1,7 @@
 from google import genai
 from google.genai import types
 from app.config import GEMINI_API_KEY
+from app.database import get_history, save_message
 
 client = genai.Client(api_key=GEMINI_API_KEY)
 
@@ -28,12 +29,21 @@ PRODUCTOS DISPONIBLES:
 
 Responde siempre en español, de forma amable y concisa.
 """
-async def get_response(msg: str) -> str:
-    response = await client.aio.models.generate_content(
+
+
+
+async def get_response(msg: str, number: str) -> str:
+    save_message(number, "user", msg)
+
+    his = [ types.Content(role=i[0], parts=[types.Part(text=i[1])]) for i in get_history(number) ]
+    chat = client.aio.chats.create(
         model="gemma-4-26b-a4b-it",
-        contents=msg,
+        history=his,
         config=types.GenerateContentConfig(
             system_instruction=SYSTEM_PROMPT
         )
     )
+    response = await chat.send_message(msg)
+
+    save_message(number, "model", response.text)
     return response.text

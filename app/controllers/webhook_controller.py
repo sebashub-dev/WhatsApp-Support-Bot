@@ -7,7 +7,7 @@ router = APIRouter()
 @router.post("/webhook")
 async def webhook(Body: str = Form(), From: str = Form()):
     try:
-        response = await ai_service.get_response(Body)
+        response = await ai_service.get_response(Body, From)
         print(response)
         await whatsapp_service.send_message(From, response)
     except Exception as e:
